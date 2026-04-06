@@ -7,17 +7,19 @@ from ui import theme
 
 
 def make_card(parent: tk.Misc) -> tk.Frame:
+    t = theme.active_theme()
     return tk.Frame(
         parent,
-        bg=theme.PANEL_BG,
-        highlightbackground=theme.BORDER,
+        bg=t.panel_bg,
+        highlightbackground=t.border,
         highlightthickness=1,
         bd=0,
     )
 
 
 def make_inner(parent: tk.Misc, *, bg: str | None = None) -> tk.Frame:
-    return tk.Frame(parent, bg=bg or theme.PANEL_BG, bd=0, highlightthickness=0)
+    t = theme.active_theme()
+    return tk.Frame(parent, bg=bg or t.panel_bg, bd=0, highlightthickness=0)
 
 
 def make_sidebar_button(
@@ -26,14 +28,15 @@ def make_sidebar_button(
     text: str,
     command,
 ) -> tk.Button:
+    t = theme.active_theme()
     return tk.Button(
         parent,
         text=text,
         command=command,
-        bg=theme.SIDEBAR_BG,
-        fg=theme.TEXT_MUTED,
-        activebackground=theme.SIDEBAR_HOVER,
-        activeforeground=theme.TEXT,
+        bg=t.sidebar_bg,
+        fg=t.text_muted,
+        activebackground=t.sidebar_hover,
+        activeforeground=t.text,
         relief="flat",
         bd=0,
         highlightthickness=0,
@@ -46,22 +49,24 @@ def make_sidebar_button(
 
 
 def set_sidebar_button_active(button: tk.Button, active: bool) -> None:
+    t = theme.active_theme()
     button.configure(
-        bg=(theme.SIDEBAR_ACTIVE if active else theme.SIDEBAR_BG),
-        fg=(theme.TEXT if active else theme.TEXT_MUTED),
-        activebackground=(theme.SIDEBAR_ACTIVE if active else theme.SIDEBAR_HOVER),
-        activeforeground=theme.TEXT,
+        bg=(t.sidebar_active if active else t.sidebar_bg),
+        fg=(t.text if active else t.text_muted),
+        activebackground=(t.sidebar_active if active else t.sidebar_hover),
+        activeforeground=t.text,
     )
 
 
 def make_primary_button(parent: tk.Misc, *, text: str, command) -> tk.Button:
+    t = theme.active_theme()
     return tk.Button(
         parent,
         text=text,
         command=command,
-        bg=theme.PRIMARY,
+        bg=t.primary,
         fg="#FFFFFF",
-        activebackground=theme.PRIMARY_HOVER,
+        activebackground=t.primary_hover,
         activeforeground="#FFFFFF",
         relief="flat",
         bd=0,
@@ -73,14 +78,15 @@ def make_primary_button(parent: tk.Misc, *, text: str, command) -> tk.Button:
 
 
 def make_secondary_button(parent: tk.Misc, *, text: str, command) -> tk.Button:
+    t = theme.active_theme()
     return tk.Button(
         parent,
         text=text,
         command=command,
-        bg=theme.PANEL_ALT,
-        fg=theme.TEXT,
-        activebackground=theme.PANEL_HOVER,
-        activeforeground=theme.TEXT,
+        bg=t.panel_alt,
+        fg=t.text,
+        activebackground=t.panel_hover,
+        activeforeground=t.text,
         relief="flat",
         bd=0,
         cursor="hand2",
@@ -91,14 +97,15 @@ def make_secondary_button(parent: tk.Misc, *, text: str, command) -> tk.Button:
 
 
 def make_quick_button(parent: tk.Misc, *, text: str, command) -> tk.Button:
+    t = theme.active_theme()
     return tk.Button(
         parent,
         text=text,
         command=command,
-        bg=theme.PANEL_ALT,
-        fg=theme.TEXT,
-        activebackground=theme.PANEL_HOVER,
-        activeforeground=theme.TEXT,
+        bg=t.panel_alt,
+        fg=t.text,
+        activebackground=t.panel_hover,
+        activeforeground=t.text,
         relief="flat",
         bd=0,
         cursor="hand2",
@@ -109,22 +116,24 @@ def make_quick_button(parent: tk.Misc, *, text: str, command) -> tk.Button:
 
 
 def make_title_label(parent: tk.Misc, text: str) -> tk.Label:
+    t = theme.active_theme()
     return tk.Label(
         parent,
         text=text,
-        bg=theme.PANEL_BG,
-        fg=theme.TEXT,
+        bg=t.panel_bg,
+        fg=t.text,
         font=(theme.FONT_FAMILY, 12, "bold"),
         anchor="w",
     )
 
 
 def make_section_label(parent: tk.Misc, text: str) -> tk.Label:
+    t = theme.active_theme()
     return tk.Label(
         parent,
         text=text,
-        bg=theme.PANEL_BG,
-        fg=theme.TEXT_MUTED,
+        bg=t.panel_bg,
+        fg=t.text_muted,
         font=(theme.FONT_FAMILY, 9, "bold"),
         anchor="w",
     )
@@ -138,6 +147,7 @@ def make_muted_label(
     wraplength: int | None = None,
     justify: str = "left",
 ) -> tk.Label:
+    t = theme.active_theme()
     kwargs = {}
     if wraplength is not None:
         kwargs["wraplength"] = wraplength
@@ -145,8 +155,8 @@ def make_muted_label(
     return tk.Label(
         parent,
         text=text,
-        bg=bg or theme.PANEL_BG,
-        fg=theme.TEXT_MUTED,
+        bg=bg or t.panel_bg,
+        fg=t.text_muted,
         font=(theme.FONT_FAMILY, 10),
         justify=justify,
         anchor="w",
@@ -162,13 +172,14 @@ def build_metric_card(
     subtitle: str,
     accent: str,
 ) -> tk.Frame:
+    t = theme.active_theme()
     card = make_card(parent)
 
     tk.Label(
         card,
         text=title,
-        bg=theme.PANEL_BG,
-        fg=theme.TEXT_MUTED,
+        bg=t.panel_bg,
+        fg=t.text_muted,
         font=(theme.FONT_FAMILY, 9, "bold"),
         anchor="w",
     ).pack(fill="x", padx=18, pady=(16, 6))
@@ -176,7 +187,7 @@ def build_metric_card(
     tk.Label(
         card,
         textvariable=value_var,
-        bg=theme.PANEL_BG,
+        bg=t.panel_bg,
         fg=accent,
         font=(theme.FONT_FAMILY, 22, "bold"),
         anchor="w",
@@ -185,8 +196,8 @@ def build_metric_card(
     tk.Label(
         card,
         text=subtitle,
-        bg=theme.PANEL_BG,
-        fg=theme.TEXT_MUTED,
+        bg=t.panel_bg,
+        fg=t.text_muted,
         font=(theme.FONT_FAMILY, 10),
         anchor="w",
     ).pack(fill="x", padx=18, pady=(4, 16))
@@ -195,14 +206,15 @@ def build_metric_card(
 
 
 def build_info_row(parent: tk.Misc, *, label: str, value_var: tk.StringVar) -> tk.Frame:
-    row = tk.Frame(parent, bg=theme.PANEL_BG)
+    t = theme.active_theme()
+    row = tk.Frame(parent, bg=t.panel_bg)
     row.pack(fill="x", padx=18, pady=4)
 
     tk.Label(
         row,
         text=label,
-        bg=theme.PANEL_BG,
-        fg=theme.TEXT_MUTED,
+        bg=t.panel_bg,
+        fg=t.text_muted,
         font=(theme.FONT_FAMILY, 10),
         width=14,
         anchor="w",
@@ -211,8 +223,8 @@ def build_info_row(parent: tk.Misc, *, label: str, value_var: tk.StringVar) -> t
     tk.Label(
         row,
         textvariable=value_var,
-        bg=theme.PANEL_BG,
-        fg=theme.TEXT,
+        bg=t.panel_bg,
+        fg=t.text,
         font=(theme.FONT_FAMILY, 10),
         anchor="w",
     ).pack(side="left", fill="x", expand=True)
@@ -221,10 +233,11 @@ def build_info_row(parent: tk.Misc, *, label: str, value_var: tk.StringVar) -> t
 
 
 def build_alert_box(parent: tk.Misc, *, textvariable: tk.StringVar) -> tk.Frame:
+    t = theme.active_theme()
     alert_box = tk.Frame(
         parent,
-        bg="#5A2A00",
-        highlightbackground="#F0B400",
+        bg=t.alert_bg,
+        highlightbackground=t.alert_border,
         highlightthickness=1,
         bd=0,
     )
@@ -232,8 +245,8 @@ def build_alert_box(parent: tk.Misc, *, textvariable: tk.StringVar) -> tk.Frame:
     tk.Label(
         alert_box,
         textvariable=textvariable,
-        bg="#5A2A00",
-        fg="#FFDFA3",
+        bg=t.alert_bg,
+        fg=t.alert_text,
         justify="left",
         wraplength=520,
         anchor="w",
@@ -243,8 +256,11 @@ def build_alert_box(parent: tk.Misc, *, textvariable: tk.StringVar) -> tk.Frame:
     return alert_box
 
 
-def create_text_area(parent: tk.Misc, *, background: str) -> tuple[tk.Frame, tk.Text]:
-    holder = tk.Frame(parent, bg=background, bd=0, highlightthickness=0)
+def create_text_area(parent: tk.Misc, *, background: str | None = None) -> tuple[tk.Frame, tk.Text]:
+    t = theme.active_theme()
+    bg = background or t.editor_bg
+
+    holder = tk.Frame(parent, bg=bg, bd=0, highlightthickness=0)
 
     text = tk.Text(
         holder,
@@ -253,10 +269,10 @@ def create_text_area(parent: tk.Misc, *, background: str) -> tuple[tk.Frame, tk.
         undo=True,
         maxundo=-1,
         autoseparators=True,
-        bg=background,
-        fg=theme.TEXT,
-        insertbackground=theme.TEXT,
-        selectbackground=theme.SELECTION,
+        bg=bg,
+        fg=t.text,
+        insertbackground=t.text,
+        selectbackground=t.selection,
         selectforeground="#FFFFFF",
         relief="flat",
         bd=0,

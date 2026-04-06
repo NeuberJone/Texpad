@@ -1,89 +1,70 @@
 from __future__ import annotations
 
 import json
+import os
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
 
 
 APP_NAME = "Texpad"
 
-
-def _documents_dir() -> Path:
-    home = Path.home()
-    docs = home / "Documents"
-    return docs if docs.exists() else home
-
-
-APP_DIR = _documents_dir() / APP_NAME
+APP_DIR = Path(os.environ.get("APPDATA") or str(Path.home())) / APP_NAME
 APP_DIR.mkdir(parents=True, exist_ok=True)
 
+CONFIG_PATH = APP_DIR / "config.json"
 BACKUP_DIR = APP_DIR / "backups"
 BACKUP_DIR.mkdir(parents=True, exist_ok=True)
 
-DEFAULT_OUTPUT_DIR = APP_DIR / "output"
-DEFAULT_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-CONFIG_PATH = APP_DIR / "config.json"
-
-DEFAULT_CONFIG: Dict[str, Any] = {
+DEFAULT_CONFIG = {
     "show_json_tab": True,
     "show_generate_json_button": True,
     "show_copy_json_button": True,
-    "use_default_output_dir": True,
-    "output_dir": str(DEFAULT_OUTPUT_DIR),
-    "use_default_list_name": True,
+    "use_default_output_dir": False,
+    "output_dir": "",
+    "use_default_list_name": False,
     "default_list_name": "lista",
-    "default_case_mode": "original",        # original | upper | lower
-    "default_input_separator": ",",         # aceita "," ";" "|" "\\t"
+    "default_case_mode": "original",
+    "default_input_separator": ",",
+    "theme_name": "Texpad Dark",
     "last_opened_file": "",
 }
 
 
-def ensure_dir(path: str | Path) -> Path:
-    p = Path(path)
-    p.mkdir(parents=True, exist_ok=True)
-    return p
-
-
-def load_config() -> Dict[str, Any]:
+def load_config() -> dict:
     if not CONFIG_PATH.exists():
         return dict(DEFAULT_CONFIG)
 
     try:
         raw = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
-        if isinstance(raw, dict):
-            cfg = {**DEFAULT_CONFIG, **raw}
-            ensure_dir(cfg.get("output_dir", DEFAULT_OUTPUT_DIR))
-            return cfg
+        if not isinstance(raw, dict):
+            return dict(DEFAULT_CONFIG)
+        return {**DEFAULT_CONFIG, **raw}
     except Exception:
-        pass
-
-    return dict(DEFAULT_CONFIG)
+        return dict(DEFAULT_CONFIG)
 
 
-def save_config(cfg: Dict[str, Any]) -> None:
-    safe_cfg = {**DEFAULT_CONFIG, **cfg}
-    ensure_dir(safe_cfg.get("output_dir", DEFAULT_OUTPUT_DIR))
+def save_config(cfg: dict) -> None:
+    merged = {**DEFAULT_CONFIG, **cfg}
     CONFIG_PATH.write_text(
-        json.dumps(safe_cfg, ensure_ascii=False, indent=2),
+        json.dumps(merged, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
 
 
-def reset_config() -> Dict[str, Any]:
+def reset_config() -> dict:
     cfg = dict(DEFAULT_CONFIG)
     save_config(cfg)
     return cfg
 
 
-def create_backup(path: Path) -> Optional[Path]:
-    if not path.exists():
-        return None
+def create_backup(source_file: str | Path) -> Path:
+    source = Path(source_file)
+    if not source.exists():
+        raise FileNotFoundError(f"Arquivo não encontrado para backup: {source}")
 
-    from datetime import datetime
-
-    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    backup_name = f"{path.stem}__backup__{stamp}{path.suffix}"
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_name = f"{source.stem}_{timestamp}{source.suffix}"
     backup_path = BACKUP_DIR / backup_name
-    backup_path.write_bytes(path.read_bytes())
+
+    backup_path.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
     return backup_path
