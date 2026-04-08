@@ -289,7 +289,7 @@ def apply_ttk_theme(style: ttk.Style | None = None, theme_name: str | None = Non
         foreground=[("active", current.text)],
     )
 
-    # Notebook / Tabs
+    # Mantido neutro caso algum Notebook ainda exista em outra tela.
     style.configure(
         "TNotebook",
         background=current.app_bg,

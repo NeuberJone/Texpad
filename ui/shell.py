@@ -298,8 +298,6 @@ class TexpadShell(tk.Frame):
         settings_view.grid(row=0, column=0, sticky="nsew")
         manual_view.grid(row=0, column=0, sticky="nsew")
 
-        settings_view.bind_runtime_widgets()
-
         self.screens = {
             "home": home_view,
             "editor": editor_view,
@@ -312,6 +310,11 @@ class TexpadShell(tk.Frame):
             editor_view=editor_view,
             settings_view=settings_view,
         )
+
+        settings_view.bind_runtime_widgets()
+        editor_view.apply_runtime_preferences()
+        self.controller.update_settings_field_states()
+        self.controller.refresh_home_dashboard()
 
     # ------------------------------------------------------------------
     # Navigation

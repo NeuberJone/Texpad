@@ -180,7 +180,6 @@ class TexpadController:
         self._set_text_readonly(self.txt_json, True)
         self._configure_tags()
         self._bind_editor_events()
-        self._apply_runtime_preferences()
 
         if not self.txt_in.get("1.0", "end-1c").strip():
             self.txt_in.insert(

@@ -45,13 +45,12 @@ class CollapsiblePanel(tk.Frame):
         self.btn_toggle.pack(fill="x")
 
         self.content = tk.Frame(self.card, bg=t.panel_bg)
-
         if self.is_open:
             self.content.pack(fill="x", padx=12, pady=(0, 12))
 
     def _refresh_toggle_text(self) -> None:
         arrow = "▼" if self.is_open else "▶"
-        self.toggle_var.set(f"{arrow}  {self.title}")
+        self.toggle_var.set(f"{arrow} {self.title}")
 
     def toggle(self) -> None:
         self.is_open = not self.is_open
@@ -63,6 +62,49 @@ class CollapsiblePanel(tk.Frame):
             self.content.pack_forget()
 
 
+class OutputTabsAdapter:
+    """
+    Adaptador leve para manter compatibilidade com o controller atual,
+    que ainda espera um objeto com interface parecida com ttk.Notebook.
+    """
+
+    def __init__(self, view: "EditorView") -> None:
+        self.view = view
+
+    def tabs(self):
+        tabs = [str(self.view.tab_list)]
+        if self.view.json_tab_visible:
+            tabs.append(str(self.view.tab_json))
+        return tuple(tabs)
+
+    def add(self, widget, text: str = "") -> None:
+        if widget == self.view.tab_json:
+            self.view._set_json_tab_visible(True)
+
+    def forget(self, widget) -> None:
+        if widget == self.view.tab_json:
+            self.view._set_json_tab_visible(False)
+
+    def select(self, widget=None):
+        if widget is None:
+            if self.view.current_output_panel == "json":
+                return str(self.view.tab_json)
+            return str(self.view.tab_list)
+
+        if widget == self.view.tab_list or widget == str(self.view.tab_list):
+            self.view._select_output_panel("list")
+            return str(self.view.tab_list)
+
+        if widget == self.view.tab_json or widget == str(self.view.tab_json):
+            if self.view.json_tab_visible:
+                self.view._select_output_panel("json")
+                return str(self.view.tab_json)
+            self.view._select_output_panel("list")
+            return str(self.view.tab_list)
+
+        return str(self.view.tab_list)
+
+
 class EditorView(tk.Frame):
     def __init__(self, parent: tk.Misc, controller) -> None:
         super().__init__(parent, bg=theme.active_theme().app_bg)
@@ -70,6 +112,10 @@ class EditorView(tk.Frame):
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(3, weight=1)
+
+        self.output_selector_buttons: dict[str, tk.Label] = {}
+        self.current_output_panel: str = "list"
+        self.json_tab_visible: bool = True
 
         self._build()
 
@@ -196,6 +242,7 @@ class EditorView(tk.Frame):
         inner = self.prepare_panel.content
 
         ttk.Label(inner, text="Separador da entrada").grid(row=0, column=0, sticky="w", padx=(0, 6))
+
         self.ent_separator = ttk.Entry(inner, textvariable=self.controller.editor_separator_var, width=8)
         self.ent_separator.grid(row=0, column=1, sticky="w")
 
@@ -216,6 +263,7 @@ class EditorView(tk.Frame):
         self.btn_clean_spaces.grid(row=0, column=4, sticky="w", padx=(0, 18))
 
         ttk.Label(inner, text="Maiúsculas / minúsculas").grid(row=0, column=5, sticky="w", padx=(0, 6))
+
         self.cmb_case_mode = ttk.Combobox(
             inner,
             textvariable=self.controller.editor_case_label_var,
@@ -254,7 +302,8 @@ class EditorView(tk.Frame):
         ttk.Button(btns_search, text="Substituir", command=self.controller.replace_current).pack(side="left", padx=(12, 0))
         ttk.Button(btns_search, text="Substituir tudo", command=self.controller.replace_all).pack(side="left", padx=(6, 0))
         ttk.Button(btns_search, text="Limpar destaque", command=self.controller.clear_search_highlight).pack(
-            side="left", padx=(12, 0)
+            side="left",
+            padx=(12, 0),
         )
 
     # ------------------------------------------------------------------
@@ -276,7 +325,7 @@ class EditorView(tk.Frame):
 
         right = make_card(body)
         right.grid(row=0, column=1, sticky="nsew", padx=(8, 0))
-        right.grid_rowconfigure(1, weight=1)
+        right.grid_rowconfigure(2, weight=1)
         right.grid_columnconfigure(0, weight=1)
 
         tk.Label(
@@ -300,20 +349,28 @@ class EditorView(tk.Frame):
             anchor="w",
         ).grid(row=0, column=0, sticky="ew", padx=14, pady=(14, 8))
 
-        self.outputs_nb = ttk.Notebook(right)
-        self.outputs_nb.grid(row=1, column=0, sticky="nsew", padx=14, pady=(0, 14))
+        self.output_selector_wrap = tk.Frame(right, bg=t.panel_bg)
+        self.output_selector_wrap.grid(row=1, column=0, sticky="ew", padx=14, pady=(0, 8))
 
-        self.tab_list = tk.Frame(self.outputs_nb, bg=t.panel_bg)
-        self.tab_json = tk.Frame(self.outputs_nb, bg=t.panel_bg)
+        self._create_output_selector_button("list", "Lista organizada")
+        self._create_output_selector_button("json", "Prévia JSON")
+        self._refresh_output_selector_buttons()
 
-        self.outputs_nb.add(self.tab_list, text="Lista organizada")
-        self.outputs_nb.add(self.tab_json, text="Prévia JSON")
+        self.output_content = tk.Frame(right, bg=t.panel_bg)
+        self.output_content.grid(row=2, column=0, sticky="nsew", padx=14, pady=(0, 14))
+        self.output_content.grid_rowconfigure(0, weight=1)
+        self.output_content.grid_columnconfigure(0, weight=1)
+
+        self.tab_list = tk.Frame(self.output_content, bg=t.panel_bg)
+        self.tab_json = tk.Frame(self.output_content, bg=t.panel_bg)
 
         self.output_editor, self.txt_out = create_text_area(self.tab_list, background=t.editor_alt)
         self.output_editor.pack(fill="both", expand=True)
 
         self.json_editor, self.txt_json = create_text_area(self.tab_json, background=t.editor_alt)
         self.json_editor.pack(fill="both", expand=True)
+
+        self.outputs_nb = OutputTabsAdapter(self)
 
         self.controller.bind_editor_widgets(
             txt_in=self.txt_in,
@@ -325,6 +382,92 @@ class EditorView(tk.Frame):
             ent_find=self.ent_find,
             ent_replace=self.ent_replace,
         )
+
+        self._set_json_tab_visible(bool(self.controller.show_json_tab_var.get()))
+        self._select_output_panel("list")
+
+    def _create_output_selector_button(self, panel_key: str, title: str) -> None:
+        t = theme.active_theme()
+
+        btn = tk.Label(
+            self.output_selector_wrap,
+            text=title,
+            bg=t.panel_alt,
+            fg=t.text_muted,
+            bd=1,
+            relief="solid",
+            cursor="hand2",
+            font=(theme.FONT_FAMILY, 10),
+            padx=12,
+            pady=8,
+        )
+        btn.bind("<Button-1>", lambda _e, key=panel_key: self._select_output_panel(key))
+        btn.bind("<Enter>", lambda _e, key=panel_key: self._hover_output_panel(key, True))
+        btn.bind("<Leave>", lambda _e, key=panel_key: self._hover_output_panel(key, False))
+
+        self.output_selector_buttons[panel_key] = btn
+
+    def _refresh_output_selector_buttons(self) -> None:
+        for btn in self.output_selector_buttons.values():
+            btn.pack_forget()
+
+        self.output_selector_buttons["list"].pack(side="left", fill="x", expand=True)
+
+        if self.json_tab_visible:
+            self.output_selector_buttons["json"].pack(side="left", fill="x", expand=True, padx=(6, 0))
+
+    def _select_output_panel(self, panel_key: str) -> None:
+        t = theme.active_theme()
+
+        if panel_key == "json" and not self.json_tab_visible:
+            panel_key = "list"
+
+        self.current_output_panel = panel_key
+
+        for key, btn in self.output_selector_buttons.items():
+            selected = key == panel_key
+            enabled = key != "json" or self.json_tab_visible
+
+            btn.configure(
+                bg=t.primary if selected else t.panel_alt,
+                fg="#FFFFFF" if selected else (t.text_muted if enabled else t.text_muted),
+                bd=1,
+                relief="solid",
+            )
+
+        self.tab_list.grid_forget()
+        self.tab_json.grid_forget()
+
+        if panel_key == "json" and self.json_tab_visible:
+            self.tab_json.grid(row=0, column=0, sticky="nsew")
+        else:
+            self.tab_list.grid(row=0, column=0, sticky="nsew")
+
+    def _hover_output_panel(self, panel_key: str, hovering: bool) -> None:
+        t = theme.active_theme()
+
+        if panel_key == self.current_output_panel:
+            return
+
+        if panel_key == "json" and not self.json_tab_visible:
+            return
+
+        btn = self.output_selector_buttons[panel_key]
+        btn.configure(
+            bg=t.panel_hover if hovering else t.panel_alt,
+            fg=t.text if hovering else t.text_muted,
+        )
+
+    def _set_json_tab_visible(self, visible: bool) -> None:
+        self.json_tab_visible = visible
+        self._refresh_output_selector_buttons()
+
+        if not visible and self.current_output_panel == "json":
+            self._select_output_panel("list")
+        elif visible and self.current_output_panel == "json":
+            self._select_output_panel("json")
+        elif self.current_output_panel == "list":
+            self._select_output_panel("list")
 
     # ------------------------------------------------------------------
     # Rodapé de ações
@@ -368,17 +511,7 @@ class EditorView(tk.Frame):
     # Preferências em runtime
     # ------------------------------------------------------------------
     def apply_runtime_preferences(self) -> None:
-        json_widget = str(self.tab_json)
-        current_tabs = self.outputs_nb.tabs()
-
-        if self.controller.show_json_tab_var.get():
-            if json_widget not in current_tabs:
-                self.outputs_nb.add(self.tab_json, text="Prévia JSON")
-        else:
-            if json_widget in current_tabs:
-                if self.outputs_nb.select() == json_widget:
-                    self.outputs_nb.select(self.tab_list)
-                self.outputs_nb.forget(self.tab_json)
+        self._set_json_tab_visible(bool(self.controller.show_json_tab_var.get()))
 
         if self.controller.show_copy_json_button_var.get():
             if not self.btn_copy_json.winfo_manager():
