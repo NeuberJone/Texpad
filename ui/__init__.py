@@ -1,3 +1,3 @@
-from .shell import TexpadShell, run_app
+from .shell import ListForgeShell, run_app
 
-__all__ = ["TexpadShell", "run_app"]
+__all__ = ["ListForgeShell", "run_app"]

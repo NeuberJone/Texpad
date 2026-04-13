@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, List
 
-from texpad_sizes import (
+from listforge_sizes import (
     format_size_token,
     gender_from_size,
     is_valid_size,

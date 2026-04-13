@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 
 
-APP_NAME = "Texpad"
+APP_NAME = "ListForge"
 
 APP_DIR = Path(os.environ.get("APPDATA") or str(Path.home())) / APP_NAME
 APP_DIR.mkdir(parents=True, exist_ok=True)
@@ -26,7 +26,7 @@ DEFAULT_CONFIG = {
     "default_list_name": "lista",
     "default_case_mode": "original",
     "default_input_separator": ",",
-    "theme_name": "Texpad Dark",
+    "theme_name": "ListForge Dark",
     "last_opened_file": "",
 }
 

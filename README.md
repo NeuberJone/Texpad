@@ -1,6 +1,6 @@
-Texpad
+ListForge
 
-Texpad é uma ferramenta independente para edição, limpeza, organização e transformação de texto estruturado e listas operacionais.
+ListForge é uma ferramenta independente para edição, limpeza, organização e transformação de texto estruturado e listas operacionais.
 
 O produto foi pensado para cenários em que o texto chega inconsistente, misturado ou mal formatado, e precisa ser tratado com rapidez, previsibilidade e baixo atrito.
 
@@ -8,18 +8,18 @@ O produto foi pensado para cenários em que o texto chega inconsistente, mistura
 
 Visão do produto
 
-O Texpad não é apenas um bloco de notas com funções extras.
+O ListForge não é apenas um bloco de notas com funções extras.
 Ele é uma ferramenta de trabalho voltada para quem precisa corrigir, reorganizar, padronizar e reaproveitar texto de forma prática.
 
 A proposta do produto é transformar tarefas repetitivas de tratamento textual em um fluxo mais rápido, seguro e reutilizável.
 
 Definição resumida
 
-Texpad = editor operacional de texto + tratamento de listas + transformação estruturada de conteúdo.
+ListForge = editor operacional de texto + tratamento de listas + transformação estruturada de conteúdo.
 
 ⸻
 
-O problema que o Texpad resolve
+O problema que o ListForge resolve
 
 Em muitas rotinas, o texto não chega pronto para uso.
 
@@ -32,18 +32,18 @@ Ele costuma vir com problemas como:
 	•	necessidade de localizar e substituir padrões rapidamente
 	•	risco de perder a versão original durante a edição
 
-O Texpad existe para reduzir esse retrabalho.
+O ListForge existe para reduzir esse retrabalho.
 
 ⸻
 
-O que o Texpad é
+O que o ListForge é
 	•	uma ferramenta focada em edição operacional de texto
 	•	um ambiente para tratar listas e dados semi-estruturados
 	•	uma base para normalização e reorganização de conteúdo
 	•	um produto pensado para uso rápido no dia a dia
 	•	uma aplicação com foco em clareza, velocidade e praticidade
 
-O que o Texpad não é
+O que o ListForge não é
 	•	não é apenas um editor genérico
 	•	não é um processador de texto pesado
 	•	não é uma IDE
@@ -54,7 +54,7 @@ O que o Texpad não é
 
 Casos de uso
 
-O Texpad pode ser usado para:
+O ListForge pode ser usado para:
 	•	limpar listas coladas de outras fontes
 	•	reorganizar conteúdo por padrão definido
 	•	normalizar separadores
@@ -123,7 +123,7 @@ Direções futuras
 
 Estrutura conceitual do fluxo
 
-O fluxo principal do Texpad tende a seguir esta lógica:
+O fluxo principal do ListForge tende a seguir esta lógica:
 	1.	colar ou inserir o texto bruto
 	2.	revisar o conteúdo original
 	3.	aplicar tratamento, limpeza ou reorganização
@@ -136,7 +136,7 @@ Esse fluxo precisa ser simples, direto e repetível.
 
 Público-alvo
 
-O Texpad é especialmente útil para quem trabalha com:
+O ListForge é especialmente útil para quem trabalha com:
 	•	listas operacionais
 	•	texto repetitivo
 	•	conteúdo vindo de múltiplas fontes
@@ -147,7 +147,7 @@ O Texpad é especialmente útil para quem trabalha com:
 
 Direção de interface
 
-A interface do Texpad deve seguir alguns princípios práticos:
+A interface do ListForge deve seguir alguns princípios práticos:
 	•	entrada e saída claramente separadas
 	•	ações principais sempre visíveis
 	•	linguagem simples
@@ -158,7 +158,7 @@ A interface do Texpad deve seguir alguns princípios práticos:
 
 Estratégia de produto
 
-O Texpad deve evoluir como um produto independente, com identidade própria e foco claro em produtividade textual.
+O ListForge deve evoluir como um produto independente, com identidade própria e foco claro em produtividade textual.
 
 A prioridade não é acumular funções aleatórias, mas construir uma ferramenta sólida para:
 	•	editar melhor
@@ -194,7 +194,7 @@ Fase 4 — Evolução estrutural
 
 Status do projeto
 
-O Texpad está em evolução como produto focado em edição e tratamento operacional de texto.
+O ListForge está em evolução como produto focado em edição e tratamento operacional de texto.
 
 A prioridade atual é consolidar sua base como ferramenta independente, simples de usar e forte nas tarefas mais recorrentes.
 
@@ -202,7 +202,7 @@ A prioridade atual é consolidar sua base como ferramenta independente, simples 
 
 Filosofia de desenvolvimento
 
-O Texpad deve crescer com disciplina.
+O ListForge deve crescer com disciplina.
 
 Isso significa:
 	•	evitar complexidade desnecessária
@@ -217,12 +217,12 @@ Contribuição
 
 Contribuições, ideias e sugestões são bem-vindas conforme a evolução do produto.
 
-O foco é manter o Texpad enxuto, útil e orientado a problemas reais.
+O foco é manter o ListForge enxuto, útil e orientado a problemas reais.
 
 ⸻
 
 Síntese
 
-Texpad é uma ferramenta independente para transformar texto bruto em conteúdo mais limpo, organizado e utilizável.
+ListForge é uma ferramenta independente para transformar texto bruto em conteúdo mais limpo, organizado e utilizável.
 
 Seu foco é produtividade operacional, com uma experiência local, prática e orientada ao tratamento inteligente de texto.

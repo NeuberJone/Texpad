@@ -139,7 +139,7 @@ class ManualView(tk.Frame):
         tk.Label(
             header_inner,
             text=(
-                "Este manual descreve o funcionamento atual do Texpad: como montar a entrada, "
+                "Este manual descreve o funcionamento atual do ListForge: como montar a entrada, "
                 "como o programa interpreta cada linha, como extrair lista a partir de um link, "
                 "como usar a saída organizada, o JSON e as configurações."
             ),
@@ -183,7 +183,7 @@ class ManualView(tk.Frame):
             (
                 "Visão geral",
                 (
-                    "O Texpad é um editor voltado para organizar listas de produção e transformar a entrada em "
+                    "O ListForge é um editor voltado para organizar listas de produção e transformar a entrada em "
                     "duas saídas principais: a Lista organizada e a Prévia JSON.\n\n"
                     "O fluxo mais comum é:\n"
                     "1. Abrir ou colar a lista na entrada.\n"

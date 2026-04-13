@@ -9,7 +9,7 @@ from ui.views.settings_view import SettingsView
 from ui.widgets import make_sidebar_button, set_sidebar_button_active
 
 
-class TexpadShell(tk.Frame):
+class ListForgeShell(tk.Frame):
     def __init__(self, parent: tk.Misc, controller) -> None:
         super().__init__(parent, bg=theme.active_theme().app_bg)
         self.controller = controller
@@ -72,7 +72,7 @@ class TexpadShell(tk.Frame):
 
         tk.Label(
             header,
-            text="Texpad",
+            text="ListForge",
             bg=t.sidebar_bg,
             fg=t.text,
             font=(theme.FONT_FAMILY, 14, "bold"),
@@ -172,7 +172,7 @@ class TexpadShell(tk.Frame):
             "settings": "Configurações",
             "manual": "Manual",
         }
-        self.title_var.set(titles.get(screen_key, "Texpad"))
+        self.title_var.set(titles.get(screen_key, "ListForge"))
 
         for key, button in self.sidebar_buttons.items():
             set_sidebar_button_active(button, key == screen_key)
@@ -198,16 +198,16 @@ class TexpadShell(tk.Frame):
             self.show_screen("editor")
 
 
-def run_app() -> tuple[tk.Tk, TexpadShell]:
-    from ui.controller import TexpadController
+def run_app() -> tuple[tk.Tk, ListForgeShell]:
+    from ui.controller import ListForgeController
 
     root = tk.Tk()
-    controller = TexpadController(root)
+    controller = ListForgeController(root)
 
     theme.configure_root(root, controller.theme_name_var.get())
     theme.apply_ttk_theme(theme_name=controller.theme_name_var.get())
 
-    shell = TexpadShell(root, controller)
+    shell = ListForgeShell(root, controller)
     shell.pack(fill="both", expand=True)
 
     root.mainloop()

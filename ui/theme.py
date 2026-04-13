@@ -34,7 +34,7 @@ class ThemePalette:
 
 
 DARK_THEME = ThemePalette(
-    name="Texpad Dark",
+    name="ListForge Dark",
     app_bg="#060B16",
     sidebar_bg="#0C1425",
     sidebar_active="#1E4478",
@@ -127,7 +127,7 @@ def active_theme() -> ThemePalette:
 def configure_root(root: tk.Tk | tk.Toplevel, theme_name: str | None = None) -> None:
     current = set_active_theme(theme_name)
     root.configure(bg=current.app_bg)
-    root.title("Texpad")
+    root.title("ListForge")
     root.geometry("1540x920")
     root.minsize(1320, 780)
     root.rowconfigure(0, weight=1)

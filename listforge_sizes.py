@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-from texpad_config import APP_DIR
+from listforge_config import APP_DIR
 
 
 SIZE_CONFIG_PATH = APP_DIR / "sizes.json"

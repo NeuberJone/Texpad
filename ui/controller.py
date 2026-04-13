@@ -8,7 +8,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog, ttk
 from urllib import error, request
 
-from texpad_config import (
+from listforge_config import (
     APP_NAME,
     BACKUP_DIR,
     DEFAULT_CONFIG,
@@ -17,7 +17,7 @@ from texpad_config import (
     reset_config,
     save_config,
 )
-from texpad_core import (
+from listforge_core import (
     build_json_preview,
     build_orders_from_orderlist,
     build_output,
@@ -30,7 +30,7 @@ from texpad_core import (
     sanitize_base_filename,
     separator_label,
 )
-from texpad_sizes import (
+from listforge_sizes import (
     GROUP_CHILD,
     GROUP_FEMALE,
     GROUP_LABELS,
@@ -60,7 +60,7 @@ CASE_LABEL_TO_VALUE = {
 CASE_VALUE_TO_LABEL = {value: label for label, value in CASE_LABEL_TO_VALUE.items()}
 
 
-class TexpadController:
+class ListForgeController:
     SEARCH_TAG = "search_match"
     SEARCH_CURRENT_TAG = "search_current"
 
