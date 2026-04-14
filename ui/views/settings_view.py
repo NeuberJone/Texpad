@@ -163,14 +163,6 @@ class SettingsView(tk.Frame):
         )
         self.ent_default_separator.grid(row=1, column=1, sticky="w", pady=(10, 0))
 
-        ttk.Label(inner_text, text='Use "\\t" para tab').grid(
-            row=1,
-            column=2,
-            sticky="w",
-            padx=(8, 0),
-            pady=(10, 0),
-        )
-
         _, inner_notes = self._make_section(container, "Observações")
 
         tk.Label(

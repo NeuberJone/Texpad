@@ -274,8 +274,6 @@ class EditorView(tk.Frame):
         self.ent_separator = ttk.Entry(inner, textvariable=self.controller.editor_separator_var, width=8)
         self.ent_separator.grid(row=0, column=1, sticky="w")
 
-        ttk.Label(inner, text='Use "\\t" para tab').grid(row=0, column=2, sticky="w", padx=(8, 18))
-
         self.btn_reset_separator = ttk.Button(
             inner,
             text="Padrão (,)",
