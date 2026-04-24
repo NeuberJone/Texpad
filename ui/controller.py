@@ -4,6 +4,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from shutil import which, rmtree
@@ -390,37 +391,50 @@ class ListForgeController:
             ) from exc
 
     def _configure_tesseract(self, pytesseract_module) -> None:
-        current_cmd = str(getattr(pytesseract_module.pytesseract, "tesseract_cmd", "")).strip()
-        if current_cmd and Path(current_cmd).exists():
-            return
-
         env_cmd = os.environ.get("TESSERACT_CMD", "").strip()
         if env_cmd and Path(env_cmd).exists():
             pytesseract_module.pytesseract.tesseract_cmd = env_cmd
+            tessdata_dir = Path(env_cmd).parent / "tessdata"
+            if tessdata_dir.exists():
+                os.environ["TESSDATA_PREFIX"] = str(tessdata_dir)
             return
+
+        bundle_dir: Path | None = None
+        if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+            bundle_dir = Path(sys._MEIPASS)
+
+        candidates: list[Path] = []
+
+        if bundle_dir is not None:
+            candidates.extend(
+                [
+                    bundle_dir / "tesseract" / "tesseract.exe",
+                    bundle_dir / "tesseract.exe",
+                ]
+            )
+
+        candidates.extend(
+            [
+                Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe"),
+                Path(r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"),
+            ]
+        )
 
         found = which("tesseract")
         if found:
-            pytesseract_module.pytesseract.tesseract_cmd = found
-            return
+            candidates.append(Path(found))
 
-        common_paths = [
-            Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe"),
-            Path(r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"),
-        ]
-
-        for candidate in common_paths:
+        for candidate in candidates:
             if candidate.exists():
                 pytesseract_module.pytesseract.tesseract_cmd = str(candidate)
+                tessdata_dir = candidate.parent / "tessdata"
+                if tessdata_dir.exists():
+                    os.environ["TESSDATA_PREFIX"] = str(tessdata_dir)
                 return
 
         raise ValueError(
             "O Tesseract OCR não foi encontrado.\n\n"
-            "Instale o Tesseract no sistema ou defina o caminho do executável.\n\n"
-            "Caminhos esperados no Windows:\n"
-            r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-            "\n"
-            r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
+            "Instale o Tesseract no sistema ou empacote-o junto com o aplicativo."
         )
 
     def _prepare_ocr_variants(self, image):
